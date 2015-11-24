@@ -5,9 +5,9 @@ Para llevar a cabo esta tarea se disponen de los siguientes metodos o formas de 
 1. Seleccionar un unico archivo de audio y colocarle una imagen presente en el equipo (localmente)
 2. Seleccionar varios archivos de audio y colocarles una imagen (unica) presente en el equipo a todos los archivos
 3. Seleccionar un unico archivo de audio y buscar la imagen relacionada al nombre de la cancion y/o artista a traves de internet
-   Para este caso, si la descarga de la imagen falla o no se logra ubicar una imagen relacionada se colocará una "imagen default"
+   Para este caso, si la descarga de la imagen falla o no se logra ubicar una imagen relacionada se colocara una "imagen default"
 4. Seleccionar varios archivos de audio y buscar la imagen relacionada con cada nombre de la cancion y/o artista a traves de internet. 
-   Para este caso, si la descarga de la imagen falla o no se logra ubicar una imagen relacionada se colocará una "imagen default"
+   Para este caso, si la descarga de la imagen falla o no se logra ubicar una imagen relacionada se colocara una "imagen default"
    
 Caso 1:
 1. Seleccione el archivo a modificar
