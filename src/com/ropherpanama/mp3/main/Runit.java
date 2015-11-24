@@ -42,9 +42,17 @@ public class Runit {
 			archivos.add(s.getPath());
 		}
 		
-		List<AudioFile> audios = AudioFileUtils.createAudioList(archivos);
+		//Le cambia el cover a todos 
+		//List<AudioFile> audios = AudioFileUtils.createAudioList(archivos);
+		//Le cambia el cover solo a los que no tienen
+		List<AudioFile> audios = AudioFileUtils.filterWithoutArtwork(archivos);
 		WebArtworkEditor editor = new WebArtworkEditor();
-		editor.searchAndDownloadArtworks(audios);
+		boolean status = editor.searchAndDownloadArtworks(audios);
+		
+		if(status)
+			System.out.println(">>>>>>>>>>>>>>>>>>>> PROCESO TERMINO CORRECTAMENTE");
+		else
+			System.out.println(">>>>>>>>>>>>>>>>>>>> PROCESO TERMINO CON ERRORES");
 		
 //		=================== PRUEBA PARA WEB COVERS ===================
 	}

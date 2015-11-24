@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.images.Artwork;
 
 public class AudioFileUtils {
 	/**
@@ -38,12 +40,47 @@ public class AudioFileUtils {
 			for (String s : files) {
 				File tmp = new File(s);
 				retorno.add(AudioFileIO.read(tmp));
+				tmp = null;
 			}
 			return retorno;
 		} catch (Exception e) {
 			return null;
 		} finally {
 			retorno = null;
+		}
+	}
+
+	/**
+	 * Retorna una lista de archivos, tomando en cuenta si ya tiene un cover
+	 * para no cambiarlo. Solo retornara aquellos elementos a los que puede
+	 * cambiarse el cover
+	 * 
+	 * @param files
+	 *            archivos de audio seleccionados
+	 * @return archivos de audio sin cover configurado
+	 */
+	public static List<AudioFile> filterWithoutArtwork(List<String> files) {
+		try {
+			List<AudioFile> retorno = new ArrayList<AudioFile>();
+
+			for (String s : files) {
+				File tmp = new File(s);
+				AudioFile au = AudioFileIO.read(tmp);
+				Tag tag = au.getTag();
+				if (tag != null) {
+					List<Artwork> artworks = tag.getArtworkList();
+					if (artworks.isEmpty())
+						retorno.add(au);
+				} else {
+					retorno.add(au);
+				}
+
+				tmp = null;
+			}
+			
+			return retorno;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 }

@@ -1,0 +1,94 @@
+Este programa tiene el siguiente objetivo general:
+- Colocar una imagen del artista o almbum a un archivo mp3 (no se ha probado con otros formatos aun)
+
+Para llevar a cabo esta tarea se disponen de los siguientes metodos o formas de hacerlo:
+1. Seleccionar un unico archivo de audio y colocarle una imagen presente en el equipo (localmente)
+2. Seleccionar varios archivos de audio y colocarles una imagen (unica) presente en el equipo a todos los archivos
+3. Seleccionar un unico archivo de audio y buscar la imagen relacionada al nombre de la cancion y/o artista a traves de internet
+   Para este caso, si la descarga de la imagen falla o no se logra ubicar una imagen relacionada se colocará una "imagen default"
+4. Seleccionar varios archivos de audio y buscar la imagen relacionada con cada nombre de la cancion y/o artista a traves de internet. 
+   Para este caso, si la descarga de la imagen falla o no se logra ubicar una imagen relacionada se colocará una "imagen default"
+   
+Caso 1:
+1. Seleccione el archivo a modificar
+
+   		String file = "D:/cover-songs/Kings_Of_Leon_Pyro.mp3"; (el nombre puede contener espacios en blanco)
+   		
+2. Suministre la ubicacion de la imagen que se desea colocar
+
+   		String image = "D:/cover-downloaded/KingsOfLeonCover.jpg";
+   		
+3. Instancie un objeto AudioFile a traves de la ruta del fichero MP3 suministrada en el punto 1
+
+   		AudioFile audio = AudioFileUtils.createAudio(file);
+   		
+4. Ejecute el metodo de cambio de imagen para un solo archivo, a traves de una instancia de la clase FileArtworkEditor 
+   
+   		FileArtworkEditor editor = new FileArtworkEditor(audio, image);
+   		editor.oneArtwork();
+   		
+Caso 2:
+1. Seleccione o ubique la ruta de la imagen a colocar a todos los archivos de audio
+
+		String image = "D:/cover-downloaded/Bob Marley - Is This Love.png";
+		
+2. Seleccione o indique el directorio (o la lista de canciones) que desea procesar; para esto tiene varias opciones
+   2.1. Procesar un directorio sin importar que existan archivos de audio que ya contengan una imagen configurada
+   2.2. Procesar un directorio, pero solo se modificaran las imagenes que realmente no tienen una imagen configurada
+   2.3. Procesar archivos de audio ubicados en cualquier parte (aplicando o no el filtro de archivos con imagen configurada anterior)
+   
+   	-- Crear una lista de ubicaciones por archivo (no necesariamente en el mismo directorio)
+
+   		List<String> archivos = new ArrayList<String>();
+		archivos.add("D:/Baladas/Bacilos - Caraluna.mp3");
+		archivos.add("D:/Boleros/Charlie Zaa Donde Esta El Amor.mp3");
+		archivos.add("D:/Classic Rock/Deep Purple-Burn.mp3");
+		
+	-- Crear una lista a partir de un directorio
+		
+		List<String> archivos = new ArrayList<String>();
+		File directory = new File("D:/Dropbox/Music Download/");
+		File[] songs = directory.listFiles();
+		
+		for(File s : songs) {
+			archivos.add(s.getPath());
+		}
+		
+		Notar que la entrada del programa es un Array de tipo String que almacena la ruta de los archivos a procesar (getPath())
+		
+	Cuando tenga la lista de archivos a procesar puede (si lo desea) ejecutar un filtro para que no se procesen aquellas imagenes que ya tienen una
+	imagen configurada.
+	
+		List<AudioFile> audios = AudioFileUtils.filterWithoutArtwork(archivos);
+		
+	Si no desea aplicar el filtro y lo que quiere es procesar todo sin distinguir algo, ejecute lo siguiente
+	
+		List<AudioFile> audios = AudioFileUtils.createAudioList(archivos);
+		
+	Con lo anterior tendra la lista de objetos AudioFile de entrada del proceso principal
+	
+3. Ejecute el metodo de cambio de imagen "manyArtworks" para varios archivos (filtrados o no) a traves de una instancia de la clase FileArtworkEditor
+
+		FileArtworkEditor editor = new FileArtworkEditor(audios, commonImage);
+		editor.manyArtworks();
+		 
+Caso 3 y 4:
+1. Cree un array de archivos de audio como en los casos anteriores, puede filtrarlos o no (como desee), la unica diferencia es que ahora ejecutara 
+   el metodo "searchAndDownloadArtworks" de la clase WebArtworkEditor, como se muestra a continuacion:
+   
+   El objeto 
+   		List<AudioFile> audios = AudioFileUtils.filterWithoutArtwork(archivos);
+   puede contener n >= 1 archivos para procesar, por ello no se define un metodo especifico para procesar un solo archivo
+   
+   		WebArtworkEditor editor = new WebArtworkEditor();
+		boolean status = editor.searchAndDownloadArtworks(audios);
+		
+	el metodo "searchAndDownloadArtworks" retorna un tipo boolean que indicara "true" para un proceso correcto y "false" para un proceso con errores
+	
+
+## MEJORAS PENDIENTES
+1. Filtrar las imagenes devueltas por Google de acuerdo a varios aspectos importantes como su dimension (ejm.: imagenes > 400 px)
+2. Si la descarga de una imagen falla, reintentar con el siguiente resultado del API, el API retorna 4 opciones para escoger, actualmente se selecciona
+   la primera url. Si esta falla, se opta por descargar la imagen default.
+3. Presentar un resumen de los archivos procesados (en teoria todos deben procesarce)
+4. Crear una interfaz grafica basada en Swing 
